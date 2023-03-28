@@ -1,0 +1,30 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  HTTP_PROXY: http://proxy.vtb.t1cloud:3128
+  HTTPS_PROXY: http://proxy.vtb.t1cloud:3128
+  no_proxy: localhost,127.0.0.1,10.2.28.0/24
+
+stages:
+  - build
+  - deploy
+
+build:
+  tags:
+    - edu
+    - shell
+  stage: build
+  script:
+    - docker compose build
+  only:
+    - main
+
+deploy-prod:
+  tags:
+    - edu
+    - shell
+  stage: deploy
+  script:
+    - docker compose down --remove-orphans
+    - docker compose up -d
+  only:
+    - main
